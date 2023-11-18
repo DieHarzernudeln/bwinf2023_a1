@@ -1,7 +1,7 @@
-# Algorithmus
-
 import math
 import random
+
+# Datenstrukturen
 
 class SchemaPunkt:
     def __init__(self, x, y, wert) -> None:
@@ -9,8 +9,13 @@ class SchemaPunkt:
         self.y = y
         self.wert = wert
 
-# (breite_hoehe, ist_links, ist_oben, [(x, y, wert), ...])
-def erstelle_falle(fenster_groesse: int) -> tuple[int, bool, bool, list[SchemaPunkt]]:
+Schema = list[SchemaPunkt]
+Arukone = list[list[int]]
+
+# Algorithmus
+
+# Rückgabewert: (breite_hoehe, ist_links, ist_oben, schema)
+def erstelle_falle(arukone_groesse: int) -> tuple[int, bool, bool, Schema]:
     schema_breite_hoehe = 4
     schema = [
         SchemaPunkt(0, 0, 1),
@@ -22,18 +27,24 @@ def erstelle_falle(fenster_groesse: int) -> tuple[int, bool, bool, list[SchemaPu
     ist_oben = True
     ist_links = False
 
-    # Spiegeln in x-Richtung
+    # Spiegeln
     if random.getrandbits(1):
+        temp = ist_oben
+        ist_oben = ist_links
+        ist_links = temp
+
+        for eintrag in schema:
+            temp = eintrag.y
+            eintrag.y = eintrag.x
+            eintrag.x = temp
+
+    # Drehen um 180°
+    if random.getrandbits(1):
+        ist_oben = not ist_oben
         ist_links = not ist_links
 
         for eintrag in schema:
             eintrag.x = (schema_breite_hoehe - 1) - eintrag.x
-            
-    # Spiegeln in y-Richtung
-    if random.getrandbits(1):
-        ist_oben = not ist_oben
-
-        for eintrag in schema:
             eintrag.y = (schema_breite_hoehe - 1) - eintrag.y
             
     # Drehen um 90°
@@ -49,8 +60,8 @@ def erstelle_falle(fenster_groesse: int) -> tuple[int, bool, bool, list[SchemaPu
 
     # an Position bewegen
 
-    x_position_falle = 0 if ist_links else fenster_groesse - schema_breite_hoehe
-    y_position_falle = 0 if ist_oben else fenster_groesse - schema_breite_hoehe
+    x_position_falle = 0 if ist_links else arukone_groesse - schema_breite_hoehe
+    y_position_falle = 0 if ist_oben else arukone_groesse - schema_breite_hoehe
 
     for eintrag in schema:
         eintrag.x += x_position_falle
@@ -58,7 +69,8 @@ def erstelle_falle(fenster_groesse: int) -> tuple[int, bool, bool, list[SchemaPu
 
     return (schema_breite_hoehe, ist_links, ist_oben, schema)
 
-def erstelle_arukone(n: int) -> list[list[int]]:
+# Annahme: n >= 4
+def erstelle_arukone(n: int) -> Arukone:
     arukone = [[0 for _ in range(n)] for _ in range(n)]
     paare = math.ceil(n / 2)
 
