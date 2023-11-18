@@ -1,0 +1,78 @@
+\section{Umsetzung}
+Die Umsetzung dieser Aufgabe erfolgt in Python, einer Programmiersprache, die für ihre Einfachheit und Lesbarkeit bekannt ist.
+Der Code ist in folgende Bereiche unterteilt:
+
+\subsection{Datenstrukturen}
+\subsubsection*{SchemaPunkt}
+Die SchemaPunkt-Struktur repräsentiert einen Eintrag in einem Schema, bestehend aus X- und Y-Koordinate sowie der entsprechenden Zahl am angegebenen Gitterfeld.
+
+\subsubsection*{Schema}
+Die Schema-Struktur repräsentiert ein Schema wie die \glqq{Fallen}\grqq-Struktur, bestehend aus einer Liste von SchemaPunkten.
+
+\subsubsection*{Arukone}
+Die Arukone-Struktur repräsentiert ein fertiggestelltes Arukone-Rätsel, bestehend aus einer Liste von Zeilen, die jeweils als eine Liste von Zahlen dargestellt werden.
+
+\subsection{Eigentlicher Algorithmus}
+Die Funktion \texttt{erstelle\_arukone()} ist dafür zuständig, ein Arukone-Rätsel der angegebenen Größe zu erstellen.
+Dabei wird die Funktion \texttt{erstelle\_falle()} aufgerufen, welche eine zufällige Fallenstruktur erzeugt.
+
+\subsubsection{Erstellen der Fallenstruktur}
+\begin{flushleft}
+      Das Erstellen der Fallenstruktur erfolgt, indem zuerst eine lokale Variable \texttt{schema} mit einer Ursprungsvariation der Fallen-Struktur initialisiert wird.
+      \linebreak
+      \linebreak
+      Außerdem werden die Variablen \texttt{ist\_oben} (mit dem Wert \texttt{True}) und \texttt{ist\_links} (mit dem Wert \texttt{False}) initialisiert, welche angeben, in welcher Ecke die Struktur platziert werden soll.
+      \linebreak
+      \linebreak
+      Im Folgenden werden diese drei Variablen dann zufällig verändert, um zufällig eine der acht möglichen Variationen der Struktur zu erzeugen.
+      Dabei wird in drei voneinander unabhängigen Schritten jeweils zufälllig entschieden, ob eine bestimmte Transformation auf das Schema und die Variablen angewendet wird, oder nicht.
+      \linebreak
+      \linebreak
+      Diese 3 Schritte sind:
+      \begin{enumerate}
+            \item Spiegeln des Schemas durch Vertauschen der X- und Y-Koordinaten aller SchemaPunkte
+            \item Drehen des Schemas um 180° durch getrenntes Spiegeln der X- und Y-Koordinaten aller SchemaPunkte
+            \item Drehen des Schemas um 90° durch Vertauschen der X- und Y-Koordinaten aller SchemaPunkte und anschließendes Spiegeln der X-Koordinaten
+      \end{enumerate}
+      Durch diese Transformationen können sowohl alle vier möglichen Drehungen (0°, 90°, 180°, 270°) als auch gespiegelte bzw. nicht gespiegelte Variationen erzeugt werden.
+      \linebreak
+      \linebreak
+      Als letzter Schritt berechnet die Funktion \texttt{erstelle\_falle()} ausgehend von \texttt{ist\_oben} und \texttt{ist\_links}, sowie der als Parameter an die Funktion übergebenen Größe des Rätsels, die endgültige Position der Falle im Rätsel und addiert die entsprechenden X- und Y-Werte zu allen SchemaPunkten.
+      \linebreak
+      \linebreak
+      Die Funktion gibt das Schema, \texttt{ist\_oben}, \texttt{ist\_links} und die Breite bzw. Höhe des Schemas als ein \texttt{tuple} zurück.
+\end{flushleft}
+
+\subsubsection{Vervollständigen des Arukone-Rätsels}
+\begin{flushleft}
+      Die Funktion \texttt{erstelle\_arukone()} erstellt zuerst eine Liste bestehend aus $n$ Listen, welche wiederum $n$ mal die Zahl $0$ enthalten. Diese Liste stellt die Kästchen und Ziffern im Rätsel dar.
+      Außerdem wird die Anzahl der Zahlenpaare des zu erstellenden Rätsels als $n / 2$, gerundet auf die nächstgrößere Ganzzahl, berechnet.
+      \linebreak
+      \linebreak
+      Daraufhin wird durch \texttt{erstelle\_falle()} eine zufällige Fallenstruktur erzeugt und in die erstellte Struktur eingefügt.
+      \linebreak
+      \linebreak
+      Zum Schluss müssen genug weitere Zahlenpaare eingefügt werden, sodass insgesamt mindestens $n/2$ Zahlenpaare im Rätsel vorhanden sind.
+      Dafür wird zuerst $n$ durch $2$ dividiert und das Ergebnis aufgerundet, um die Anzahl der Zahlenpaare zu erhalten.
+      \linebreak
+      \linebreak
+      Daraufhin wird mithilfe einer Zählschleife von $3$ bis zu (inklusive) der Anzahl der Paare gezählt (Start bei $3$, da die Fallenstruktur bereits zwei Zahlenpaare enthält).
+      Dabei werden die Spalten des Rätsels von links nach rechts durchlaufen und je ein Zahlenpaar in die entsprechende Spalte eingetragen.
+      Dabei beginnt das durchlaufen der Spalten mit der ersten Spalte, wenn die Falle rechts ist, und mit der 4. Spalte, wenn die Falle links ist.
+      \linebreak
+      \linebreak
+      In jeder Spalte wird zuerst ein zufälliges Kästchen bestimmt, in welches die erste Zahl des Zahlenpaares eingetragen wird.
+      Daraufhin wird ein weiteres zufälliges Kästchen unterhalb des ersten ausgewählt, in welches die zweite Zahl des Paares eingetragen wird. Dabei wird darauf geachtet, dass für die erste Zahl nicht das unterste Kästchen der Spalte ausgewählt wird, sodass stets für die zweite Zahl Platz bleibt.
+      \linebreak
+      \linebreak
+      Jetzt wurde ein vollständiges, gültiges, nicht vom Lösungsprogramm lösbares Arukone-Rätsel der festgelegten Größe mit mindestens $n/2$ Zahlenpaaren erstellt. Dieses wird nun zurückgegeben.
+\end{flushleft}
+
+\subsection{Eingabe, Ausgabe}
+Das Hauptprogramm startet eine Schleife ohne Abbruchbedingung, welche die folgenden Schritte ausführt:
+\begin{enumerate}
+      \item Abfragen der Größe des zu erstellenden Rätsels
+      \item Erstellen des Rätsels mithilfe von \texttt{erstelle\_arukone()}
+      \item Umwandlung der Arukone-Datenstruktur und Ausgabe des Rätsels durch die Funktion \texttt{arukone\_anzeigen()}
+\end{enumerate}
+Drückt der Benutzer Strg+C, wird das Programm beendet.
